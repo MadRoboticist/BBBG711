@@ -3,11 +3,11 @@
 
 #include "g711.h"
 
-/* 16384 entries per table (16 bit) */
+/** 16384 entries per table (16 bit) */
 unsigned char linear_to_alaw[65536];
 unsigned char linear_to_ulaw[65536];
 
-/* 16384 entries per table (8 bit) */
+/** 16384 entries per table (8 bit) */
 unsigned short alaw_to_linear[256];
 unsigned short ulaw_to_linear[256];
 

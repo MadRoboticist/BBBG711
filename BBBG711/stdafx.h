@@ -1,14 +1,15 @@
-// stdafx.h : include file for standard system include files,
+/** @file stdafx.h 
+	@brief include file for standard system include files,
 // or project specific include files that are used frequently, but
 // are changed infrequently
-//
+*/
 
 #pragma once
 
 #pragma comment(linker, "/nodefaultlib:libc.lib")
 #pragma comment(linker, "/nodefaultlib:libcd.lib")
 
-// NOTE - this value is not strongly correlated to the Windows CE OS version being targeted
+/** @brief NOTE - this value is not strongly correlated to the Windows CE OS version being targeted */
 #define WINVER _WIN32_WCE
 
 #include <ceconfig.h>
@@ -56,7 +57,10 @@
 #include "g711_table.h"
 //using namespace std;
 
+/** @brief so we can use the type uint32_t */
 typedef unsigned __int32 uint32_t;
+/** @brief so we can use the type uint16_t */
 typedef unsigned short uint16_t;
+/** @brief so we can use the type uint8_t */
 typedef unsigned char uint8_t;
 // TODO: reference additional headers your program requires here

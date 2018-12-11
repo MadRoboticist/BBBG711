@@ -1,7 +1,7 @@
-/*
- * g711.h
+/**
+ * @file g711.h
  *
- * u-law, A-law and linear PCM conversions.
+ * @brief u-law, A-law and linear PCM conversions.
  * Source: http://www.speech.kth.se/cost250/refsys/latest/src/g711.h
  */
 

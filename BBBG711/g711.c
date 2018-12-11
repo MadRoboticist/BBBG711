@@ -1,4 +1,4 @@
-/*
+/**
  * This source code is a product of Sun Microsystems, Inc. and is provided
  * for unrestricted use.  Users may copy or modify this source code without
  * charge.
@@ -23,8 +23,8 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-/*
- * December 30, 1994:
+/**
+ * @date December 30, 1994:
  * Functions linear2alaw, linear2ulaw have been updated to correctly
  * convert unquantized 16 bit values.
  * Tables for direct u- to A-law and A- to u-law conversions have been
@@ -33,31 +33,36 @@
  * bli@cpk.auc.dk
  *
  */
-/*
+/**
  * Downloaded from comp.speech site in Cambridge.
  *
  */
 
 #include "g711.h"
 
-/*
- * g711.c
+/**
+ * @file g711.c
  *
- * u-law, A-law and linear PCM conversions.
+ * @brief u-law, A-law and linear PCM conversions.
  * Source: http://www.speech.kth.se/cost250/refsys/latest/src/g711.c
  */
-#define	SIGN_BIT	(0x80)		/* Sign bit for a A-law byte. */
-#define	QUANT_MASK	(0xf)		/* Quantization field mask. */
-#define	NSEGS		(8)		/* Number of A-law segments. */
-#define	SEG_SHIFT	(4)		/* Left shift for segment number. */
-#define	SEG_MASK	(0x70)		/* Segment field mask. */
+/** @brief Sign bit for a A-law byte. */
+#define	SIGN_BIT	(0x80)	
+/** @brief Quantization field mask. */
+#define	QUANT_MASK	(0xf)
+/** @brief Number of A-law segments. */
+#define	NSEGS		(8)
+/** @brief Left shift for segment number. */
+#define	SEG_SHIFT	(4)
+/** @brief Segment field mask. */
+#define	SEG_MASK	(0x70)		
 
 static short seg_aend[8] = {0x1F, 0x3F, 0x7F, 0xFF,
 			    0x1FF, 0x3FF, 0x7FF, 0xFFF};
 static short seg_uend[8] = {0x3F, 0x7F, 0xFF, 0x1FF,
 			    0x3FF, 0x7FF, 0xFFF, 0x1FFF};
 
-/* copy from CCITT G.711 specifications */
+/** copy from CCITT G.711 specifications */
 unsigned char _u2a[128] = {			/* u- to A-law conversions */
 	1,	1,	2,	2,	3,	3,	4,	4,
 	5,	5,	6,	6,	7,	7,	8,	8,
@@ -69,7 +74,7 @@ unsigned char _u2a[128] = {			/* u- to A-law conversions */
 	55,	56,	57,	58,	59,	60,	61,	62,
 	64,	65,	66,	67,	68,	69,	70,	71,
 	72,	73,	74,	75,	76,	77,	78,	79,
-/* corrected:
+/** corrected:
 	81,	82,	83,	84,	85,	86,	87,	88, 
    should be: */
 	80,	82,	83,	84,	85,	86,	87,	88,
@@ -78,8 +83,8 @@ unsigned char _u2a[128] = {			/* u- to A-law conversions */
 	105,	106,	107,	108,	109,	110,	111,	112,
 	113,	114,	115,	116,	117,	118,	119,	120,
 	121,	122,	123,	124,	125,	126,	127,	128};
-
-unsigned char _a2u[128] = {			/* A- to u-law conversions */
+/** A- to u-law conversions */
+unsigned char _a2u[128] = {			
 	1,	3,	5,	7,	9,	11,	13,	15,
 	16,	17,	18,	19,	20,	21,	22,	23,
 	24,	25,	26,	27,	28,	29,	30,	31,
@@ -89,7 +94,7 @@ unsigned char _a2u[128] = {			/* A- to u-law conversions */
 	50,	51,	52,	53,	54,	55,	56,	57,
 	58,	59,	60,	61,	62,	63,	64,	64,
 	65,	66,	67,	68,	69,	70,	71,	72,
-/* corrected:
+/** corrected:
 	73,	74,	75,	76,	77,	78,	79,	79,
    should be: */
 	73,	74,	75,	76,	77,	78,	79,	80,
@@ -114,7 +119,7 @@ static short search(
    return (size);
 }
 
-/*
+/**
  * linear2alaw() - Convert a 16-bit linear PCM value to 8-bit A-law
  *
  * linear2alaw() accepts an 16-bit integer and encodes it as A-law data.
@@ -166,7 +171,7 @@ linear2alaw(short pcm_val)	/* 2's complement (16-bit range) */
    }
 }
 
-/*
+/**
  * alaw2linear() - Convert an A-law value to 16-bit linear PCM
  *
  */
@@ -194,11 +199,12 @@ alaw2linear(
    }
    return ((a_val & SIGN_BIT) ? t : -t);
 }
-
-#define	BIAS		(0x84)		/* Bias for linear code. */
+/** @brief Bias for linear code. */
+#define	BIAS		(0x84)	
+/** @brief clipping volume */
 #define CLIP            8159
 
-/*
+/**
 * linear2ulaw() - Convert a linear PCM value to u-law
 *
 * In order to simplify the encoding process, the original linear magnitude
@@ -262,7 +268,7 @@ linear2ulaw(
    
 }
 
-/*
+/**
  * ulaw2linear() - Convert a u-law value to 16-bit linear PCM
  *
  * First, a biased linear code is derived from the code word. An unbiased
@@ -290,7 +296,7 @@ ulaw2linear(
    return ((u_val & SIGN_BIT) ? (BIAS - t) : (t - BIAS));
 }
 
-/* A-law to u-law conversion */
+/** A-law to u-law conversion */
 unsigned char
 alaw2ulaw(
    unsigned char	aval)
@@ -300,7 +306,7 @@ alaw2ulaw(
 	   (0x7F ^ _a2u[aval ^ 0x55]));
 }
 
-/* u-law to A-law conversion */
+/** u-law to A-law conversion */
 unsigned char
 ulaw2alaw(
    unsigned char	uval)
