@@ -1,12 +1,24 @@
+/** @file BBBG711.c
 
+	@author David Pasley
+
+	@brief A program to perform G.711 encoding/decoding 
+	modified from: https://github.com/escrichov/G711
+	to support Windows CE 7 on a Beaglebone Black
+ 
+	The program was modified to handle PCM and G.711 headers. 
+	If doing G.711->PCM conversion, a-law or u-law is determined
+	by information in the header.
+*/
 #include "stdafx.h"
 
+/** @brief prints command line usage to terminal */
 void print_usage(char *program_name)
 {
     printf("Usage: %s input_file CONVERSION output_file\n", program_name);
-    printf("Supported CONVERSIONs: pcm_alaw, pcm_ulaw, alaw_pcm, ulaw_pcm\n");
+    printf("Supported CONVERSIONs: pcm_alaw, pcm_ulaw, g711_pcm\n");
 }
-
+/** @brief returns the file size */
 long get_file_size(FILE *f)
 {
     long file_size;
@@ -23,7 +35,7 @@ long get_file_size(FILE *f)
 
     return file_size;
 }
-
+/** @brief allocates a buffer */
 char * allocate_buffer(long buffer_size)
 {
     char *buffer;
@@ -40,22 +52,37 @@ char * allocate_buffer(long buffer_size)
 
     return buffer;
 }
-
+/** @brief The particular format of the PCM header 
+being read in for this project. This is fairly standard. */
 struct PCMheader {
+	/** @brief contains exactly the characters "RIFF". */
 	uint8_t RIFF[4];
+	/** @brief size of the file in bytes */
 	uint32_t FileSize;
+	/** @brief contains exactly the characters "WAVEfmt ". */
 	uint8_t WAVEfmt[8];
+	/** @brief The size of the fmt chunk in bytes */
 	uint32_t fmtSize;
+	/** @brief usually 1 for PCM */
 	uint16_t formattag;
+	/** @brief Number of channels.. 
+	usually either 1 for mono or 2 for stereo */
 	uint16_t nChannels;
+	/** @brief frames/second */
 	uint32_t frequency;
+	/** @brief bytes per second */
 	uint32_t bytes_per_second;
+	/** @brief bytes per capture (e.g 2 for 16bits) */
 	uint16_t bytes_by_capture;
+	/** @brief bits per sample... 
+	same as above, but in bits instead of bytes */
 	uint16_t bits_per_sample;
+	/** @brief contains exactly the characters "data" */
 	uint8_t w_data[4];
+	/** @brief number of bytes in the data */
 	uint32_t bytes_in_data;
 };
-
+/** @brief a function to print the PCM header. */
 void printPCMheader(struct PCMheader header)
 {
 	int i = 0;
@@ -78,7 +105,7 @@ void printPCMheader(struct PCMheader header)
 	printf("data: %c%c%c%c\n",header.w_data[0],header.w_data[1],header.w_data[2],header.w_data[3]);
 	printf("bytes in data: %d\n",header.bytes_in_data);
 }
-
+/** @brief initializes PCM header for when the output file is PCM */
 void initPCMheader(struct PCMheader * header)
 {
 	header->RIFF[0]='R';
@@ -103,30 +130,52 @@ void initPCMheader(struct PCMheader * header)
 	header->bits_per_sample = 16;
 	return;
 }
-
+/** @brief The particular G711 header used in this project.
+Fairly standard. */
 struct G711header {
+	/** @brief contains exactly the characters "RIFF". */
 	uint8_t RIFF[4];
+	/** @brief size of the file in bytes */
 	uint32_t FileSize;
+	/** @brief contains exactly the characters "WAVEfmt ". */
 	uint8_t WAVEfmt[8];
+	/** @brief The size of the fmt chunk in bytes */
 	uint32_t fmtSize;
+	/** @brief tells what kind of G711 it is (a-law or u-law) */
 	uint16_t formattag;
+	/** @brief Number of channels.. 
+	usually either 1 for mono or 2 for stereo */
 	uint16_t nChannels;
+	/** @brief frames/second */
 	uint32_t frequency;
+	/** @brief bytes per second */
 	uint32_t bytes_per_second;
+	/** @brief to align the data with 32 bit words */
 	uint16_t blockAlign;
+	/** @brief number of bits per sample.. */
 	uint16_t bits_per_sample;
+	/** @brief The size of the next block */
 	uint16_t cbSize;
+	/** @brief contains exactly the characters "fact" */
 	uint8_t fact[4];
+	/** @brief this is the LSB of the size of the next chunk */
 	uint16_t cfSizeLSB;
+	/** @brief this is the MSB of the size of the next chunk */
 	uint16_t cfSizeMSB;
+	/** @brief this is the LSB of the size of the data in bytes */
 	uint16_t sampleLengthLSB;
+	/** @brief this is the MSB of the size of the data in bytes */
 	uint16_t sampleLengthMSB;
+	/** @brief contains exactly the characters "data" */
 	uint8_t w_data[4];
+	/** @brief this is the LSB of the size of the data in bytes */
 	uint16_t dataLengthLSB;
+	/** @brief this is the MSB of the size of the data in bytes */
 	uint16_t dataLengthMSB;
+	/** @brief to align the data with 32 bit words */
 	uint16_t blockAlign2;
 };
-
+/** @brief A function to print out the contents of the G711 header */
 void printG711header(struct G711header header)
 {
 	int i = 0;
@@ -157,6 +206,7 @@ void printG711header(struct G711header header)
 	printf("data length MSB: %d\n",header.dataLengthMSB);
 	printf("block align: %d\n\n",header.blockAlign2);
 }
+/** @brief initialize G711 header for when output file is G711. */
 void initG711header(struct G711header * header)
 {
 	header->RIFF[0]='R';
@@ -188,7 +238,8 @@ void initG711header(struct G711header * header)
 	header->blockAlign2 = 0xFFFF;
 	return;
 }
-
+/** @brief the main function, takes Unicode arguments. 
+Thank you, Windows, for the complication. */
 int wmain(int argc, wchar_t *argv[])
 {
     FILE    *fRead, *fWrite;
