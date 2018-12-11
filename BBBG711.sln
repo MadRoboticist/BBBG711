@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BBBG711", "BBBG711\BBBG711.vcproj", "{9E9824BB-2B8E-4A7B-AF92-3DA76C59B4FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|BeagleBone WEC7 SDK (ARMv4I) = Debug|BeagleBone WEC7 SDK (ARMv4I)
+		Release|BeagleBone WEC7 SDK (ARMv4I) = Release|BeagleBone WEC7 SDK (ARMv4I)
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E9824BB-2B8E-4A7B-AF92-3DA76C59B4FA}.Debug|BeagleBone WEC7 SDK (ARMv4I).ActiveCfg = Debug|BeagleBone WEC7 SDK (ARMv4I)
+		{9E9824BB-2B8E-4A7B-AF92-3DA76C59B4FA}.Debug|BeagleBone WEC7 SDK (ARMv4I).Build.0 = Debug|BeagleBone WEC7 SDK (ARMv4I)
+		{9E9824BB-2B8E-4A7B-AF92-3DA76C59B4FA}.Debug|BeagleBone WEC7 SDK (ARMv4I).Deploy.0 = Debug|BeagleBone WEC7 SDK (ARMv4I)
+		{9E9824BB-2B8E-4A7B-AF92-3DA76C59B4FA}.Release|BeagleBone WEC7 SDK (ARMv4I).ActiveCfg = Release|BeagleBone WEC7 SDK (ARMv4I)
+		{9E9824BB-2B8E-4A7B-AF92-3DA76C59B4FA}.Release|BeagleBone WEC7 SDK (ARMv4I).Build.0 = Release|BeagleBone WEC7 SDK (ARMv4I)
+		{9E9824BB-2B8E-4A7B-AF92-3DA76C59B4FA}.Release|BeagleBone WEC7 SDK (ARMv4I).Deploy.0 = Release|BeagleBone WEC7 SDK (ARMv4I)
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
